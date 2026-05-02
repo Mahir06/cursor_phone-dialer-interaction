@@ -1,6 +1,6 @@
 :root {
-  --bg: #0c0e12;
-  --page-fg: #9aa3b2;
+  --bg: #fafafa;
+  --page-fg: #3a3a3c;
   /* In-phone (light) */
   --phone-surface: #ebe9e4;
   --phone-surface-2: #e3e1dc;
@@ -36,37 +36,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   padding: 24px 16px 48px;
-  gap: 24px;
-}
-
-.page-header {
-  text-align: center;
-  max-width: 420px;
-}
-
-.page-title {
-  margin: 0 0 8px;
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #e8ecf4;
-  letter-spacing: -0.02em;
-  font-family: "Fira Sans", system-ui, sans-serif;
-}
-
-.page-hint {
-  margin: 0;
-  font-size: 0.875rem;
-  line-height: 1.5;
-  font-family: "Fira Sans", system-ui, sans-serif;
-}
-
-.page-code {
-  font-size: 0.8em;
-  padding: 0.15em 0.45em;
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.08);
-  color: #c8d0e0;
 }
 
 /* Phone mockup PNG */
