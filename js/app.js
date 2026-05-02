@@ -10,7 +10,10 @@ const STEP_DEG = 36;
 const START_DEG_CW = 45;
 const COMMIT_MAX_DIST = 26;
 const MIN_DRAG_DEG = 4;
-const ORBIT_FRAC = 0.29;
+/** Hole-center orbit vs wheel width — larger = more space between numbers. */
+const ORBIT_FRAC = 0.34;
+/** Highlight digit when within this many degrees of the marker (3 o'clock). */
+const PREVIEW_MAX_DIST = 32;
 
 function normDeg(d) {
   let x = d % 360;
@@ -97,8 +100,25 @@ function initRotaryDial() {
     return { index: best, dist: bestD, digit: best >= 0 ? DIGITS_CW[best] : null };
   }
 
+  function clearPreview() {
+    holes.forEach((h) => {
+      const el = h.querySelector(".rotary-hole-num");
+      if (el) el.classList.remove("rotary-hole-num--at-marker");
+    });
+  }
+
+  function updatePreview() {
+    clearPreview();
+    const { index, dist } = digitAtMarker();
+    if (index >= 0 && dist <= PREVIEW_MAX_DIST) {
+      const el = holes[index]?.querySelector(".rotary-hole-num");
+      if (el) el.classList.add("rotary-hole-num--at-marker");
+    }
+  }
+
   function commitIfNeeded() {
     wheel.classList.remove("rotary-wheel--dragging");
+    clearPreview();
     const prevRot = rotation;
     if (dragAccum >= MIN_DRAG_DEG) {
       const { dist, digit } = digitAtMarker();
@@ -202,6 +222,7 @@ function initRotaryDial() {
     rotation += delta;
     dragAccum += Math.abs(delta);
     wheel.style.setProperty("--rot", `${rotation}deg`);
+    updatePreview();
   });
 
   wheel.addEventListener("pointerup", () => {
