@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Phone canvas</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="page-header">
+        <h1 class="page-title">Experimental UI</h1>
+        <p class="page-hint">Build inside the screen below. Deploy this folder as static files.</p>
+      </header>
+
+      <div class="device-wrap">
+        <div class="device" role="img" aria-label="Phone mockup">
+          <div class="device-frame">
+            <div class="device-dynamic-island"></div>
+            <div class="device-screen">
+              <div id="app" class="app-root">
+                <!-- Everything you build lives inside #app -->
+
+                <div class="demo-dial">
+                  <div class="demo-dial-display" id="dial-display" aria-live="polite"></div>
+                  <div class="demo-dial-grid" id="dial-grid"></div>
+                </div>
+              </div>
+              <div class="device-home-indicator" aria-hidden="true"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="js/app.js"></script>
+  </body>
+</html>
