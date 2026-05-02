@@ -1,5 +1,5 @@
 /**
- * App logic lives here. The visible phone UI is the #app region in index.html.
+ * App logic: dial pad inside #app (phone mockup).
  */
 
 const layout = [
@@ -17,12 +17,73 @@ const layout = [
   { digit: "#", sub: "" },
 ];
 
+const LONG_PRESS_MS = 480;
+
 function createDialPad() {
   const grid = document.getElementById("dial-grid");
   const display = document.getElementById("dial-display");
-  if (!grid || !display) return;
+  const displayWrap = document.getElementById("dial-display-wrap");
+  const backBtn = document.getElementById("dial-backspace");
+  if (!grid || !display || !displayWrap || !backBtn) return;
 
   let buffer = "";
+
+  function sync() {
+    display.textContent = buffer;
+    backBtn.disabled = buffer.length === 0;
+  }
+
+  function appendChar(ch) {
+    buffer += ch;
+    sync();
+  }
+
+  function backspace() {
+    buffer = buffer.slice(0, -1);
+    sync();
+  }
+
+  function clearAll() {
+    buffer = "";
+    sync();
+    displayWrap.classList.remove("is-clearing");
+    void displayWrap.offsetWidth;
+    displayWrap.classList.add("is-clearing");
+  }
+
+  backBtn.addEventListener("click", () => {
+    if (buffer.length) backspace();
+  });
+
+  let swipeStartX = 0;
+  let swipeTracking = false;
+
+  displayWrap.addEventListener(
+    "touchstart",
+    (e) => {
+      if (e.touches.length !== 1) return;
+      swipeStartX = e.touches[0].clientX;
+      swipeTracking = true;
+    },
+    { passive: true },
+  );
+
+  displayWrap.addEventListener(
+    "touchmove",
+    (e) => {
+      if (!swipeTracking || e.touches.length !== 1) return;
+      const dx = e.touches[0].clientX - swipeStartX;
+      if (dx < -56) {
+        swipeTracking = false;
+        clearAll();
+      }
+    },
+    { passive: true },
+  );
+
+  displayWrap.addEventListener("touchend", () => {
+    swipeTracking = false;
+  });
 
   layout.forEach(({ digit, sub }) => {
     const btn = document.createElement("button");
@@ -41,10 +102,10 @@ function createDialPad() {
       btn.appendChild(s);
     }
 
-    const onPress = (clientX, clientY) => {
-      buffer += digit === "+" ? "" : digit;
-      display.textContent = buffer;
+    let longPressTimer = null;
+    let longPressFired = false;
 
+    const addRipple = (clientX, clientY) => {
       const rect = btn.getBoundingClientRect();
       const x = clientX - rect.left;
       const y = clientY - rect.top;
@@ -56,7 +117,9 @@ function createDialPad() {
       ripple.style.top = `${y - size / 2}px`;
       btn.appendChild(ripple);
       ripple.addEventListener("animationend", () => ripple.remove());
+    };
 
+    const flashPress = () => {
       btn.classList.add("is-pressed");
       window.setTimeout(() => btn.classList.remove("is-pressed"), 120);
     };
@@ -64,11 +127,43 @@ function createDialPad() {
     btn.addEventListener("pointerdown", (e) => {
       if (e.button !== 0 && e.pointerType === "mouse") return;
       btn.setPointerCapture(e.pointerId);
-      onPress(e.clientX, e.clientY);
+      addRipple(e.clientX, e.clientY);
+      flashPress();
+
+      longPressFired = false;
+      if (digit === "0") {
+        longPressTimer = window.setTimeout(() => {
+          longPressTimer = null;
+          longPressFired = true;
+          appendChar("+");
+        }, LONG_PRESS_MS);
+      }
+    });
+
+    btn.addEventListener("pointerup", () => {
+      if (digit === "0") {
+        if (longPressTimer != null) {
+          window.clearTimeout(longPressTimer);
+          longPressTimer = null;
+        }
+        if (!longPressFired) appendChar("0");
+        return;
+      }
+      appendChar(digit);
+    });
+
+    btn.addEventListener("pointercancel", () => {
+      if (longPressTimer != null) {
+        window.clearTimeout(longPressTimer);
+        longPressTimer = null;
+      }
+      longPressFired = false;
     });
 
     grid.appendChild(btn);
   });
+
+  sync();
 }
 
 document.addEventListener("DOMContentLoaded", createDialPad);

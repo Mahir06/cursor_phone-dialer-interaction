@@ -3,14 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Phone canvas</title>
+    <title>Dialer — experimental UI</title>
     <link rel="stylesheet" href="css/styles.css" />
   </head>
   <body>
     <div class="page">
       <header class="page-header">
         <h1 class="page-title">Experimental UI</h1>
-        <p class="page-hint">Build inside the screen below. Deploy this folder as static files.</p>
+        <p class="page-hint">Live site updates when we push to <code class="page-code">main</code>.</p>
       </header>
 
       <div class="device-wrap">
@@ -22,7 +22,21 @@
                 <!-- Everything you build lives inside #app -->
 
                 <div class="demo-dial">
-                  <div class="demo-dial-display" id="dial-display" aria-live="polite"></div>
+                  <div
+                    class="demo-dial-display-wrap"
+                    id="dial-display-wrap"
+                    title="Swipe left to clear"
+                  >
+                    <div class="demo-dial-display" id="dial-display" aria-live="polite"></div>
+                    <button
+                      type="button"
+                      class="dial-backspace"
+                      id="dial-backspace"
+                      aria-label="Delete last digit"
+                    >
+                      ⌫
+                    </button>
+                  </div>
                   <div class="demo-dial-grid" id="dial-grid"></div>
                 </div>
               </div>
