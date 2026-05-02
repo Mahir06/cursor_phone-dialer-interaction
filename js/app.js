@@ -1,15 +1,16 @@
 /**
- * Rotary dial: digits 0–9 CCW from 3 o'clock (0, 9, 8, …, 1). Orange marker fixed at 3 o'clock.
- * Holes are placed with pixel radii from the wheel center — % translateY is relative to the hole
- * itself in CSS, which caused all digits to overlap at the center on iOS.
+ * Rotary dial — layout matches reference: digits 1→2→…→0 clockwise, starting ~4:30 from 3 o'clock.
+ * Angles are clockwise from east (screen coords: +y = down), same as atan2 with y-down.
+ * Marker stays at 3 o'clock (east).
  */
 
-const DIGITS_CCW = ["0", "9", "8", "7", "6", "5", "4", "3", "2", "1"];
+const DIGITS_CW = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
 const STEP_DEG = 36;
+/** First digit (1) sits ~4:30; east = 0°, clockwise = positive. */
+const START_DEG_CW = 45;
 const COMMIT_MAX_DIST = 26;
 const MIN_DRAG_DEG = 4;
-/** Orbit radius as fraction of wheel width (hole centers). */
-const ORBIT_FRAC = 0.315;
+const ORBIT_FRAC = 0.29;
 
 function normDeg(d) {
   let x = d % 360;
@@ -41,7 +42,7 @@ function initRotaryDial() {
   let dragAccum = 0;
 
   const holes = [];
-  DIGITS_CCW.forEach((digit, i) => {
+  DIGITS_CW.forEach((digit, i) => {
     const hole = document.createElement("div");
     hole.className = "rotary-hole";
     hole.innerHTML = `<span class="rotary-hole-num">${digit}</span>`;
@@ -54,19 +55,27 @@ function initRotaryDial() {
     if (!w) return;
     const orbitR = w * ORBIT_FRAC;
     holes.forEach((hole, i) => {
-      const deg = i * STEP_DEG;
-      const rad = (deg * Math.PI) / 180;
+      const degCw = START_DEG_CW + i * STEP_DEG;
+      const rad = (degCw * Math.PI) / 180;
       const dx = Math.cos(rad) * orbitR;
       const dy = Math.sin(rad) * orbitR;
       hole.style.transform = `translate(-50%, -50%) translate(${dx.toFixed(2)}px, ${dy.toFixed(2)}px)`;
     });
   }
 
-  layoutHoles();
-  const ro = new ResizeObserver(() => layoutHoles());
+  function scheduleLayout() {
+    layoutHoles();
+    requestAnimationFrame(() => {
+      layoutHoles();
+      requestAnimationFrame(layoutHoles);
+    });
+  }
+
+  scheduleLayout();
+  const ro = new ResizeObserver(() => scheduleLayout());
   ro.observe(wheel);
   window.addEventListener("orientationchange", () => {
-    requestAnimationFrame(layoutHoles);
+    requestAnimationFrame(scheduleLayout);
   });
 
   function syncDisplay() {
@@ -77,15 +86,15 @@ function initRotaryDial() {
   function digitAtMarker() {
     let best = -1;
     let bestD = 999;
-    DIGITS_CCW.forEach((_, i) => {
-      const world = normDeg(i * STEP_DEG + rotation);
+    DIGITS_CW.forEach((_, i) => {
+      const world = normDeg(START_DEG_CW + i * STEP_DEG + rotation);
       const d = circDistToZero(world);
       if (d < bestD) {
         bestD = d;
         best = i;
       }
     });
-    return { index: best, dist: bestD, digit: best >= 0 ? DIGITS_CCW[best] : null };
+    return { index: best, dist: bestD, digit: best >= 0 ? DIGITS_CW[best] : null };
   }
 
   function commitIfNeeded() {
@@ -238,7 +247,7 @@ function initRotaryDial() {
   wheel.style.setProperty("--rot", "0deg");
   void wheel.offsetWidth;
   wheel.classList.remove("rotary-wheel--instant");
-  requestAnimationFrame(layoutHoles);
+  scheduleLayout();
 }
 
 document.addEventListener("DOMContentLoaded", initRotaryDial);
