@@ -3,7 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Dialer — experimental UI</title>
+    <title>Rotary dialer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="css/styles.css" />
   </head>
   <body>
@@ -18,25 +24,42 @@
           <div class="device-photo-stack">
             <div class="device-photo-screen">
               <div id="app" class="app-root">
-                <!-- Everything you build lives inside #app -->
+                <div class="rotary-app">
+                  <div class="rotary-status" aria-hidden="true">
+                    <span class="rotary-status-time" id="rotary-status-time">9:41</span>
+                    <span class="rotary-status-trail"></span>
+                    <span class="rotary-status-icons">
+                      <span class="rotary-signal"></span>
+                      <span class="rotary-wifi"></span>
+                      <span class="rotary-battery"></span>
+                    </span>
+                  </div>
 
-                <div class="demo-dial">
+                  <header class="rotary-head">
+                    <div class="rotary-star" aria-hidden="true">✦</div>
+                    <h2 class="rotary-title">Enter your number</h2>
+                    <p class="rotary-sub">the old way</p>
+                  </header>
+
                   <div
-                    class="demo-dial-display-wrap"
-                    id="dial-display-wrap"
+                    class="rotary-display-row"
+                    id="rotary-display-wrap"
                     title="Swipe left to clear"
                   >
-                    <div class="demo-dial-display" id="dial-display" aria-live="polite"></div>
-                    <button
-                      type="button"
-                      class="dial-backspace"
-                      id="dial-backspace"
-                      aria-label="Delete last digit"
-                    >
+                    <div class="rotary-display" id="rotary-display" aria-live="polite"></div>
+                    <button type="button" class="rotary-back" id="rotary-back" aria-label="Delete last digit">
                       ⌫
                     </button>
                   </div>
-                  <div class="demo-dial-grid" id="dial-grid"></div>
+
+                  <div class="rotary-stage">
+                    <div class="rotary-marker" aria-hidden="true"></div>
+                    <div class="rotary-wheel-outer">
+                      <div class="rotary-wheel" id="rotary-wheel" role="slider" aria-valuemin="0" aria-valuemax="9" aria-label="Rotary dial"></div>
+                    </div>
+                  </div>
+
+                  <p class="rotary-hint">Rotate until digit reaches marker, then release to enter</p>
                 </div>
               </div>
             </div>

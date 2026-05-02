@@ -1,13 +1,20 @@
 :root {
   --bg: #0c0e12;
   --page-fg: #9aa3b2;
-  --screen-bg: #000000;
+  /* In-phone (light) */
+  --phone-surface: #ebe9e4;
+  --phone-surface-2: #e3e1dc;
+  --phone-text: #1c1c1e;
+  --phone-muted: #6c6c70;
+  --phone-subtle: #aeaeb2;
+  --marker-orange: #ff6b21;
+  --dial-ring: #d8d6d1;
+  --dial-ring-deep: #c4c2bc;
+  --dial-hole: #b9b7b1;
+  --dial-hole-inner: #a8a6a0;
   --accent: #5b8cff;
-  --key-bg: rgba(255, 255, 255, 0.06);
-  --key-bg-active: rgba(91, 140, 255, 0.35);
-  --key-fg: #e8ecf4;
   --safe-bottom: 26px;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: "Fira Sans", system-ui, -apple-system, sans-serif;
 }
 
 *,
@@ -44,12 +51,14 @@ body {
   font-weight: 600;
   color: #e8ecf4;
   letter-spacing: -0.02em;
+  font-family: "Fira Sans", system-ui, sans-serif;
 }
 
 .page-hint {
   margin: 0;
   font-size: 0.875rem;
   line-height: 1.5;
+  font-family: "Fira Sans", system-ui, sans-serif;
 }
 
 .page-code {
@@ -60,10 +69,7 @@ body {
   color: #c8d0e0;
 }
 
-/*
- * Phone mockup: PNG frame (transparent screen hole). Insets calibrated to
- * Assets/apple-iphone-16-pro-max-2024-medium.png (364×750): hole bbox x 16–348, y 14–736.
- */
+/* Phone mockup PNG */
 .device-wrap {
   flex: 1;
   display: flex;
@@ -107,8 +113,8 @@ body {
   bottom: 1.7333%;
   border-radius: 11.5%;
   overflow: hidden;
-  background: var(--screen-bg);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+  background: var(--phone-surface);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06);
   display: flex;
   flex-direction: column;
 }
@@ -119,158 +125,311 @@ body {
   height: 100%;
   display: flex;
   flex-direction: column;
-  /* Keep primary controls below PNG Dynamic Island */
-  padding: clamp(42px, 12cqh, 56px) 14px var(--safe-bottom);
+  padding: clamp(36px, 10cqh, 50px) 12px var(--safe-bottom);
   overflow: auto;
   -webkit-overflow-scrolling: touch;
   touch-action: manipulation;
   position: relative;
   z-index: 1;
+  font-family: "Fira Sans", system-ui, sans-serif;
+  color: var(--phone-text);
+  background: var(--phone-surface);
 }
 
-/* Demo dial UI — replace or extend in #app */
-.demo-dial {
+/* ——— Rotary dial app ——— */
+.rotary-app {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  height: 100%;
+  align-items: stretch;
+  min-height: 100%;
+  gap: 0.35rem;
 }
 
-.demo-dial-display-wrap {
+.rotary-status {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 8px;
-  min-height: 2.75rem;
-  padding: 8px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  touch-action: pan-y;
-  position: relative;
+  padding: 0 6px 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--phone-text);
+  letter-spacing: -0.02em;
 }
 
-.demo-dial-display-wrap.is-clearing {
-  animation: display-shake 0.35s ease;
+.rotary-status-time {
+  min-width: 2.5rem;
 }
 
-@keyframes display-shake {
-  0%,
-  100% {
-    transform: translateX(0);
-  }
-  25% {
-    transform: translateX(-6px);
-  }
-  75% {
-    transform: translateX(6px);
-  }
-}
-
-.demo-dial-display {
+.rotary-status-trail {
   flex: 1;
-  min-height: 2.5rem;
-  font-size: 1.75rem;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  color: var(--key-fg);
+}
+
+.rotary-status-icons {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.rotary-signal {
+  width: 18px;
+  height: 10px;
+  background: linear-gradient(
+    90deg,
+    transparent 0 2px,
+    var(--phone-text) 2px 3px,
+    transparent 3px 5px,
+    var(--phone-text) 5px 6px,
+    transparent 6px 8px,
+    var(--phone-text) 8px 9px,
+    transparent 9px
+  );
+  opacity: 0.85;
+  border-radius: 1px;
+}
+
+.rotary-wifi {
+  width: 13px;
+  height: 10px;
+  opacity: 0.85;
+  background: radial-gradient(circle, var(--phone-text) 55%, transparent 56%) 0 100% / 5px 5px no-repeat,
+    radial-gradient(circle, var(--phone-text) 55%, transparent 56%) 50% 60% / 7px 7px no-repeat,
+    radial-gradient(circle, var(--phone-text) 55%, transparent 56%) 100% 0 / 9px 9px no-repeat;
+}
+
+.rotary-battery {
+  width: 22px;
+  height: 11px;
+  border: 1.5px solid var(--phone-text);
+  border-radius: 3px;
+  position: relative;
+  opacity: 0.9;
+}
+
+.rotary-battery::after {
+  content: "";
+  position: absolute;
+  right: -3px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 4px;
+  background: var(--phone-text);
+  border-radius: 0 1px 1px 0;
+}
+
+.rotary-battery::before {
+  content: "";
+  position: absolute;
+  inset: 2px 3px 2px 2px;
+  background: var(--phone-text);
+  border-radius: 1px;
+  opacity: 0.35;
+}
+
+.rotary-head {
+  text-align: center;
+  padding: 0.25rem 0 0.5rem;
+}
+
+.rotary-star {
+  font-size: 0.65rem;
+  color: var(--phone-subtle);
+  letter-spacing: 0.15em;
+  margin-bottom: 0.35rem;
+  opacity: 0.9;
+}
+
+.rotary-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: var(--phone-text);
+}
+
+.rotary-sub {
+  margin: 0.2rem 0 0;
+  font-size: 0.72rem;
+  font-weight: 400;
+  text-transform: lowercase;
+  color: var(--phone-muted);
+  letter-spacing: 0.02em;
+}
+
+.rotary-display-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.5rem 4px 0.65rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  touch-action: pan-y;
+}
+
+.rotary-display {
+  flex: 1;
+  min-height: 2.4rem;
+  font-size: 1.65rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--phone-text);
   text-align: center;
   font-variant-numeric: tabular-nums;
-  padding: 0 4px;
 }
 
-.demo-dial-display:empty::before {
-  content: " ";
+.rotary-display:empty::before {
+  content: "\00a0";
   opacity: 0;
 }
 
-.dial-backspace {
+.rotary-back {
   flex-shrink: 0;
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   border: none;
-  border-radius: 12px;
-  background: var(--key-bg);
-  color: var(--key-fg);
-  font-size: 1.25rem;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.06);
+  color: var(--phone-text);
+  font-size: 1.1rem;
   cursor: pointer;
-  transition:
-    transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1),
-    background 0.15s ease;
+  transition: transform 0.12s ease, background 0.15s ease;
   -webkit-tap-highlight-color: transparent;
+  font-family: inherit;
 }
 
-.dial-backspace:active {
-  transform: scale(0.92);
-  background: var(--key-bg-active);
+.rotary-back:active {
+  transform: scale(0.94);
+  background: rgba(0, 0, 0, 0.1);
 }
 
-.dial-backspace:disabled {
+.rotary-back:disabled {
   opacity: 0.35;
   cursor: default;
   transform: none;
 }
 
-.demo-dial-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
+.rotary-stage {
+  position: relative;
   flex: 1;
-  align-content: start;
-}
-
-.dial-key {
-  aspect-ratio: 1;
-  max-height: 72px;
-  margin: 0 auto;
-  width: 100%;
-  border: none;
-  border-radius: 50%;
-  background: var(--key-bg);
-  color: var(--key-fg);
-  font-size: 1.35rem;
-  font-weight: 500;
-  cursor: pointer;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2px;
-  transition:
-    transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1),
-    background 0.15s ease,
-    box-shadow 0.15s ease;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  position: relative;
-  overflow: hidden;
+  min-height: min(52vw, 220px);
+  padding: 8px 0 4px;
 }
 
-.dial-key-sub {
-  font-size: 0.6rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  color: rgba(232, 236, 244, 0.55);
-  text-transform: uppercase;
-}
-
-.dial-key:active,
-.dial-key.is-pressed {
-  transform: scale(0.92);
-  background: var(--key-bg-active);
-}
-
-.dial-key .ripple {
+.rotary-marker {
   position: absolute;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.35);
-  transform: scale(0);
-  animation: ripple 0.55s ease-out forwards;
+  right: 2%;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 4;
+  width: 0;
+  height: 0;
+  border-top: 9px solid transparent;
+  border-bottom: 9px solid transparent;
+  border-right: 13px solid var(--marker-orange);
+  filter: drop-shadow(0 1px 2px rgba(255, 107, 33, 0.35));
   pointer-events: none;
 }
 
-@keyframes ripple {
-  to {
-    transform: scale(3.5);
-    opacity: 0;
-  }
+.rotary-wheel-outer {
+  width: min(78vw, 260px);
+  max-width: 100%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  padding: 5%;
+  background: linear-gradient(145deg, #f0eeea, var(--dial-ring));
+  box-shadow:
+    0 12px 28px rgba(0, 0, 0, 0.12),
+    0 2px 6px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.75);
 }
 
+.rotary-wheel {
+  --rot: 0deg;
+  --hole-tr: 38%;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  position: relative;
+  touch-action: none;
+  cursor: grab;
+  transform: rotate(var(--rot));
+  transition: transform 0.55s cubic-bezier(0.34, 1.25, 0.64, 1);
+  background:
+    radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.55), transparent 45%),
+    radial-gradient(circle at 50% 50%, var(--dial-ring-deep) 0%, var(--dial-ring) 52%, #b0aea8 100%);
+  box-shadow:
+    inset 0 2px 6px rgba(255, 255, 255, 0.45),
+    inset 0 -4px 12px rgba(0, 0, 0, 0.14),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+.rotary-wheel:active {
+  cursor: grabbing;
+}
+
+.rotary-wheel--dragging {
+  transition: none;
+}
+
+.rotary-wheel--instant {
+  transition: none !important;
+}
+
+.rotary-wheel::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 32%;
+  height: 32%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: linear-gradient(160deg, #efede8, #d9d7d2);
+  box-shadow:
+    inset 0 2px 4px rgba(255, 255, 255, 0.7),
+    inset 0 -3px 8px rgba(0, 0, 0, 0.12),
+    0 2px 4px rgba(0, 0, 0, 0.06);
+  pointer-events: none;
+}
+
+.rotary-hole {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 18%;
+  height: 18%;
+  margin: -9% 0 0 -9%;
+  transform: rotate(var(--hole-a)) translateY(calc(-1 * var(--hole-tr))) rotate(calc(-1 * var(--hole-a)));
+  pointer-events: none;
+}
+
+.rotary-hole-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  font-size: clamp(0.85rem, 3.8cqw, 1.05rem);
+  font-weight: 600;
+  color: #3a3a3c;
+  background: radial-gradient(circle at 30% 25%, #cfcdcb, var(--dial-hole) 55%, var(--dial-hole-inner) 100%);
+  box-shadow:
+    inset 0 2px 3px rgba(255, 255, 255, 0.45),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.2),
+    0 2px 4px rgba(0, 0, 0, 0.12);
+  letter-spacing: -0.02em;
+}
+
+.rotary-hint {
+  margin: auto 0 0;
+  padding: 0.35rem 0.5rem 0;
+  text-align: center;
+  font-size: 0.68rem;
+  font-weight: 400;
+  line-height: 1.35;
+  color: var(--phone-muted);
+}
