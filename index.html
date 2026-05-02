@@ -14,43 +14,41 @@
       </header>
 
       <div class="device-wrap">
-        <div class="device device--iphone16" role="img" aria-label="iPhone 16 mockup">
-          <div class="device-chassis">
-            <span class="device-btn device-btn--action" aria-hidden="true"></span>
-            <span class="device-btn device-btn--vol-up" aria-hidden="true"></span>
-            <span class="device-btn device-btn--vol-down" aria-hidden="true"></span>
-            <span class="device-btn device-btn--power" aria-hidden="true"></span>
-            <div class="device-frame">
-              <div class="device-screen">
-                <div class="device-island" aria-hidden="true">
-                  <span class="device-island-glare"></span>
-                </div>
-                <div class="device-screen-shine" aria-hidden="true"></div>
-                <div id="app" class="app-root">
-                  <!-- Everything you build lives inside #app -->
+        <div class="device device--photo" role="img" aria-label="iPhone 16 Pro Max mockup">
+          <div class="device-photo-stack">
+            <div class="device-photo-screen">
+              <div id="app" class="app-root">
+                <!-- Everything you build lives inside #app -->
 
-                  <div class="demo-dial">
-                    <div
-                      class="demo-dial-display-wrap"
-                      id="dial-display-wrap"
-                      title="Swipe left to clear"
+                <div class="demo-dial">
+                  <div
+                    class="demo-dial-display-wrap"
+                    id="dial-display-wrap"
+                    title="Swipe left to clear"
+                  >
+                    <div class="demo-dial-display" id="dial-display" aria-live="polite"></div>
+                    <button
+                      type="button"
+                      class="dial-backspace"
+                      id="dial-backspace"
+                      aria-label="Delete last digit"
                     >
-                      <div class="demo-dial-display" id="dial-display" aria-live="polite"></div>
-                      <button
-                        type="button"
-                        class="dial-backspace"
-                        id="dial-backspace"
-                        aria-label="Delete last digit"
-                      >
-                        ⌫
-                      </button>
-                    </div>
-                    <div class="demo-dial-grid" id="dial-grid"></div>
+                      ⌫
+                    </button>
                   </div>
+                  <div class="demo-dial-grid" id="dial-grid"></div>
                 </div>
-                <div class="device-home-indicator" aria-hidden="true"></div>
               </div>
             </div>
+            <img
+              class="device-photo-frame"
+              src="Assets/apple-iphone-16-pro-max-2024-medium.png"
+              width="364"
+              height="750"
+              alt=""
+              decoding="async"
+              fetchpriority="high"
+            />
           </div>
         </div>
       </div>
