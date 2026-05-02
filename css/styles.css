@@ -125,7 +125,7 @@ body {
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding: clamp(26px, 7.5cqh, 40px) 10px calc(var(--safe-bottom) + 6px);
+  padding: clamp(20px, 6cqh, 34px) 10px calc(var(--safe-bottom) + 6px);
   overflow: auto;
   -webkit-overflow-scrolling: touch;
   touch-action: manipulation;
@@ -142,61 +142,35 @@ body {
   min-height: 0;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   align-items: stretch;
-  justify-content: center;
-  gap: 0.65rem;
-  padding-bottom: 2px;
+  padding: 4px 2px 2px;
 }
 
-.rotary-cluster {
+.rotary-section--top {
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  align-items: stretch;
-  gap: 0.5rem;
-  flex-shrink: 0;
+  gap: 0.65rem;
 }
 
-.rotary-status {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 2px 4px 6px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--phone-text);
-  letter-spacing: -0.02em;
-  flex-shrink: 0;
-}
-
-.rotary-status-time {
-  min-width: 2.5rem;
-}
-
-.rotary-status-trail {
+.rotary-section--mid {
   flex: 1;
-}
-
-.rotary-status-icons {
+  min-height: 0;
   display: flex;
   align-items: center;
-  gap: 6px;
-  color: var(--phone-text);
-  flex-shrink: 0;
+  justify-content: center;
+  padding: 0.75rem 0;
 }
 
-.rotary-status-ico {
-  display: block;
+.rotary-section--bottom {
   flex-shrink: 0;
-}
-
-.rotary-status-ico--bat {
-  margin-left: 1px;
+  padding-top: 0.25rem;
 }
 
 .rotary-head {
   text-align: center;
-  padding: 0.15rem 0 0.35rem;
+  padding: 0.2rem 0 0;
   flex-shrink: 0;
   position: relative;
   z-index: 1;
@@ -237,15 +211,14 @@ body {
 .rotary-display-row {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 0.55rem 4px 0.7rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+  justify-content: center;
+  padding: 0.35rem 4px 0.5rem;
   touch-action: pan-y;
 }
 
 .rotary-display {
-  flex: 1;
-  min-height: 2.4rem;
+  width: 100%;
+  min-height: 2.5rem;
   font-size: 1.65rem;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -259,40 +232,14 @@ body {
   opacity: 0;
 }
 
-.rotary-back {
-  flex-shrink: 0;
-  width: 42px;
-  height: 42px;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  border-radius: 11px;
-  background: rgba(255, 255, 255, 0.65);
-  color: var(--phone-text);
-  font-size: 1.1rem;
-  cursor: pointer;
-  transition: transform 0.12s ease, background 0.15s ease, box-shadow 0.15s ease;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-  -webkit-tap-highlight-color: transparent;
-  font-family: inherit;
-}
-
-.rotary-back:active {
-  transform: scale(0.94);
-  background: rgba(0, 0, 0, 0.1);
-}
-
-.rotary-back:disabled {
-  opacity: 0.35;
-  cursor: default;
-  transform: none;
-}
-
 .rotary-stage {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
   min-height: min(48vw, 210px);
-  padding: 10px 0 6px;
+  padding: 4px 0;
   overflow: visible;
 }
 
@@ -358,22 +305,46 @@ body {
   transition: none !important;
 }
 
-.rotary-wheel::after {
-  content: "";
+.rotary-hub-btn {
   position: absolute;
   left: 50%;
   top: 50%;
+  /* Counter parent .rotary-wheel rotation so ⌫ stays upright */
+  transform: translate(-50%, -50%) rotate(calc(-1 * var(--rot, 0deg)));
+  z-index: 10;
   width: 32%;
-  height: 32%;
-  transform: translate(-50%, -50%);
+  aspect-ratio: 1;
+  max-width: 5.25rem;
+  padding: 0;
+  margin: 0;
+  border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 50%;
-  z-index: 0;
-  background: linear-gradient(160deg, #efede8, #d9d7d2);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: clamp(1rem, 4.5vmin, 1.35rem);
+  font-weight: 600;
+  line-height: 1;
+  color: var(--phone-text);
+  background: linear-gradient(165deg, #ffffff 0%, #f0eeeb 45%, #e6e4e0 100%);
   box-shadow:
-    inset 0 2px 4px rgba(255, 255, 255, 0.7),
-    inset 0 -3px 8px rgba(0, 0, 0, 0.12),
-    0 2px 4px rgba(0, 0, 0, 0.06);
-  pointer-events: none;
+    0 2px 8px rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -2px 6px rgba(0, 0, 0, 0.06);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease;
+}
+
+.rotary-hub-btn:active:not(:disabled) {
+  transform: translate(-50%, -50%) rotate(calc(-1 * var(--rot, 0deg))) scale(0.96);
+  box-shadow:
+    0 1px 4px rgba(0, 0, 0, 0.1),
+    inset 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.rotary-hub-btn:disabled {
+  opacity: 0.38;
+  cursor: default;
 }
 
 .rotary-hole {
@@ -426,12 +397,11 @@ body {
 
 .rotary-hint {
   margin: 0;
-  padding: 0.35rem 0.6rem 0.15rem;
+  padding: 0 0.6rem 0.2rem;
   text-align: center;
   font-size: 0.69rem;
   font-weight: 400;
   line-height: 1.45;
   color: var(--phone-muted);
-  flex-shrink: 0;
   opacity: 0.92;
 }

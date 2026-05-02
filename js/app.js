@@ -34,9 +34,8 @@ function initRotaryDial() {
   const wheel = document.getElementById("rotary-wheel");
   const display = document.getElementById("rotary-display");
   const displayWrap = document.getElementById("rotary-display-wrap");
-  const backBtn = document.getElementById("rotary-back");
-  const clockEl = document.getElementById("rotary-status-time");
-  if (!wheel || !display || !displayWrap || !backBtn) return;
+  const hubBack = document.getElementById("rotary-hub-back");
+  if (!wheel || !display || !displayWrap || !hubBack) return;
 
   let buffer = "";
   let rotation = 0;
@@ -83,7 +82,7 @@ function initRotaryDial() {
 
   function syncDisplay() {
     display.textContent = buffer;
-    backBtn.disabled = buffer.length === 0;
+    hubBack.disabled = buffer.length === 0;
   }
 
   function digitAtMarker() {
@@ -158,12 +157,22 @@ function initRotaryDial() {
     });
   }
 
-  backBtn.addEventListener("click", () => {
+  function backspace() {
     if (buffer.length) {
       buffer = buffer.slice(0, -1);
       syncDisplay();
     }
-  });
+  }
+
+  hubBack.addEventListener("click", () => backspace());
+
+  hubBack.addEventListener(
+    "pointerdown",
+    (e) => {
+      e.stopPropagation();
+    },
+    { capture: true },
+  );
 
   let swipeX0 = 0;
   let swipeOn = false;
@@ -197,6 +206,8 @@ function initRotaryDial() {
 
   wheel.addEventListener("pointerdown", (e) => {
     if (e.button !== 0 && e.pointerType === "mouse") return;
+    const t = e.target;
+    if (t instanceof Element && t.closest(".rotary-hub-btn")) return;
     e.preventDefault();
     const r = wheel.getBoundingClientRect();
     const cx = r.left + r.width / 2;
@@ -252,16 +263,6 @@ function initRotaryDial() {
     }
     commitIfNeeded();
   });
-
-  function tickClock() {
-    const d = new Date();
-    const h = d.getHours();
-    const m = d.getMinutes();
-    const t = `${((h + 11) % 12) + 1}:${m.toString().padStart(2, "0")}`;
-    if (clockEl) clockEl.textContent = t;
-  }
-  tickClock();
-  setInterval(tickClock, 30_000);
 
   syncDisplay();
   wheel.classList.add("rotary-wheel--instant");
