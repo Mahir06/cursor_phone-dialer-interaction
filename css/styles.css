@@ -151,8 +151,9 @@ body {
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
-  padding-top: clamp(14px, 3.5cqh, 24px);
+  /* Space between heading block (“Enter your number”) and dialed digits */
+  gap: clamp(1rem, 3.2cqh, 1.45rem);
+  padding-top: clamp(20px, 4.8cqh, 32px);
 }
 
 .rotary-section--mid {
