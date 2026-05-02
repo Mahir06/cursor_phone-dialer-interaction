@@ -107,14 +107,12 @@ body {
   container-name: photo-screen;
   position: absolute;
   z-index: 1;
-  /* Slightly inset from PNG hole edges; larger % radius matches iPhone 16 screen corners */
   top: 1.65%;
   left: 4.15%;
   right: 3.88%;
   bottom: 1.52%;
-  /* Match Pro Max screen corner (fallback % then container width) */
-  border-radius: 14%;
-  border-radius: 15.2cqw;
+  /* Modest radius — large % + cqw read as a pill; keep closer to real screen corners */
+  border-radius: 9.5%;
   overflow: hidden;
   background: var(--phone-surface);
   box-shadow: none;
@@ -128,7 +126,7 @@ body {
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding: clamp(28px, 8cqh, 44px) 10px var(--safe-bottom);
+  padding: clamp(26px, 7.5cqh, 40px) 10px calc(var(--safe-bottom) + 6px);
   overflow: auto;
   -webkit-overflow-scrolling: touch;
   touch-action: manipulation;
@@ -137,7 +135,6 @@ body {
   font-family: "Fira Sans", system-ui, sans-serif;
   color: var(--phone-text);
   background: var(--phone-surface);
-  isolation: isolate;
 }
 
 /* ——— Rotary dial app ——— */
@@ -173,63 +170,18 @@ body {
 .rotary-status-icons {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
+  color: var(--phone-text);
+  flex-shrink: 0;
 }
 
-.rotary-signal {
-  width: 18px;
-  height: 10px;
-  background: linear-gradient(
-    90deg,
-    transparent 0 2px,
-    var(--phone-text) 2px 3px,
-    transparent 3px 5px,
-    var(--phone-text) 5px 6px,
-    transparent 6px 8px,
-    var(--phone-text) 8px 9px,
-    transparent 9px
-  );
-  opacity: 0.85;
-  border-radius: 1px;
+.rotary-status-ico {
+  display: block;
+  flex-shrink: 0;
 }
 
-.rotary-wifi {
-  width: 13px;
-  height: 10px;
-  opacity: 0.85;
-  background: radial-gradient(circle, var(--phone-text) 55%, transparent 56%) 0 100% / 5px 5px no-repeat,
-    radial-gradient(circle, var(--phone-text) 55%, transparent 56%) 50% 60% / 7px 7px no-repeat,
-    radial-gradient(circle, var(--phone-text) 55%, transparent 56%) 100% 0 / 9px 9px no-repeat;
-}
-
-.rotary-battery {
-  width: 22px;
-  height: 11px;
-  border: 1.5px solid var(--phone-text);
-  border-radius: 3px;
-  position: relative;
-  opacity: 0.9;
-}
-
-.rotary-battery::after {
-  content: "";
-  position: absolute;
-  right: -3px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 2px;
-  height: 4px;
-  background: var(--phone-text);
-  border-radius: 0 1px 1px 0;
-}
-
-.rotary-battery::before {
-  content: "";
-  position: absolute;
-  inset: 2px 3px 2px 2px;
-  background: var(--phone-text);
-  border-radius: 1px;
-  opacity: 0.35;
+.rotary-status-ico--bat {
+  margin-left: 1px;
 }
 
 .rotary-head {
@@ -363,7 +315,6 @@ body {
 
 .rotary-wheel {
   --rot: 0deg;
-  --hole-tr: 38%;
   width: 100%;
   height: 100%;
   border-radius: 50%;
@@ -418,8 +369,8 @@ body {
   top: 50%;
   width: 19%;
   height: 19%;
-  margin: -9.5% 0 0 -9.5%;
-  transform: rotate(var(--hole-a)) translateY(calc(-1 * var(--hole-tr))) rotate(calc(-1 * var(--hole-a)));
+  margin: 0;
+  /* transform set in JS: translate(-50%,-50%) + orbit in px (CSS % translate is vs. hole box) */
   pointer-events: none;
   z-index: 2;
 }
@@ -446,10 +397,11 @@ body {
 
 .rotary-hint {
   margin: auto 0 0;
-  padding: 0.35rem 0.5rem 0;
+  padding: 0.45rem 0.5rem 0.25rem;
   text-align: center;
   font-size: 0.68rem;
   font-weight: 400;
-  line-height: 1.35;
+  line-height: 1.4;
   color: var(--phone-muted);
+  flex-shrink: 0;
 }
