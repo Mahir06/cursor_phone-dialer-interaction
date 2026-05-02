@@ -152,6 +152,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.65rem;
+  padding-top: clamp(14px, 3.5cqh, 24px);
 }
 
 .rotary-section--mid {
@@ -212,16 +213,16 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.35rem 4px 0.5rem;
+  padding: 0.45rem 4px 0.55rem;
   touch-action: pan-y;
 }
 
 .rotary-display {
   width: 100%;
-  min-height: 2.5rem;
-  font-size: 1.65rem;
+  min-height: 3rem;
+  font-size: clamp(1.95rem, 6.5vmin, 2.35rem);
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
   color: var(--phone-text);
   text-align: center;
   font-variant-numeric: tabular-nums;
